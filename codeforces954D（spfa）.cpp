@@ -1,16 +1,16 @@
-#include<bits/stdc++.h>
-using namespace std;
-#define fi first
-#define se second
-#define ll long long
-#define pb push_back
-#define mp make_pair
-#define pii pair<int,int>
-#define inf 0x3f3f3f3f
-#define mem(a,b) memset(a,b,sizeof(a))
-#define maxn 1010  // 最大顶点数
+// 单源最短路 SPFA
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+
+#define  MAXN 20010  // 最大顶点数
 
 using namespace std;
+
+bool vis[MAXN]; // 是否在队列
+int cnt[MAXN];  // 每个顶点的入队列次数，用于判定是否存在负环回路
+int dist[MAXN];
 
 struct Edge {
     int v;
@@ -22,25 +22,20 @@ struct Edge {
     }
 };
 
-vector<Edge> ver[maxn];
-bool vis[maxn]; // 是否在队列
-bool bian[maxn][maxn];
-int cnt[maxn];  // 每个顶点的入队列次数，用于判定是否存在负环回路
-// int dist[maxn];
-int n, m, start, ed;
+vector <Edge> ver[MAXN];
 
 void addEdge(int u, int v, int w) {
     ver[u].push_back(Edge(v, w));
 }
 
-bool spfa(int st, int *dist) {
-    memset(dist, inf, sizeof(dist));
-    dist[st] = 0;
+bool SPFA(int start, int n) {
+    memset(dist, 0x3f, sizeof(dist));
+    dist[start] = 0;
     queue<int> que;
 
-    vis[st] = true;
-    que.push(st);
-    cnt[st] = 1;
+    vis[start] = true;
+    que.push(start);
+    cnt[start] = 1;
     while (!que.empty()) {
         int u = que.front();
         que.pop();
@@ -63,44 +58,16 @@ bool spfa(int st, int *dist) {
 }
 
 int main() {
-    cin >> n >> m >> start >> ed;
-        int ans = 0;
-        mem(bian, false);
-        for(int i = 0;i <= n;i++) ver[i].clear();
+    int n, m; // n个顶点，m条边
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
         int u, v, w;
-        for (int i = 0; i < m; i++) {
-            cin >> u >> v;
-            bian[u][v] = true;
-            bian[v][u] = true;
-            addEdge(u, v, 1);
-            addEdge(v, u, 1);
-        }
-
-        int s[maxn], t[maxn];
-        mem(s, inf);
-        mem(t, inf);
-        spfa(start, s);
-        spfa(ed, t);
-        // for(int i = 1;i <= n;i++) cout << s[i] << ' ';
-        // cout << endl;
-        // for(int i = 1;i <= n;i++) cout << t[i] << ' ';
-        // cout << endl;
-        // for(int i = 1;i <= n;i++) {
-        //     for(int j = 1;j <= n;j++) {
-        //         cout << bian[i][j] << ' ';
-        //     }
-        //     cout << endl;
-        // }
-        // cout << endl;
-        for(int i = 1;i <= n;i++) {
-            for(int j = i+1;j <= n;j++) {
-                if(!bian[i][j]) {
-                //     cout << "s[" << i << "]: " << s[i];
-                //     cout << " t[" << j << "]: " << t[j] << endl;
-                    if(s[i]+t[j]+1 >= s[ed] && s[j]+t[i]+1 >= s[ed]) ans++;
-                }
-            }
-        }
-        cout << ans << endl;
+        cin >> u >> v >> w;
+        addEdge(u, v, w);
+    }
+    SPFA(1, n);
+    for (int i = 2; i <= n; i++) {
+        cout << dist[i] << endl;
+    }
     return 0;
 }
