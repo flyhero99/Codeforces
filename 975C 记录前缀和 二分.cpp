@@ -58,10 +58,8 @@ int main() {
                 cout << n << endl;
                 continue;
             }
-            int alive = lower_bound(suma+1, suma+n+1, qry) - suma;
-            ll ans;
-            if(qry == suma[alive]) cout << n-alive << endl;
-            else cout << n-alive+1 << endl;
+            int alive = upper_bound(suma+1, suma+n+1, qry) - suma;
+            cout << n-alive+1 << endl;
         }
     }
     return 0;
